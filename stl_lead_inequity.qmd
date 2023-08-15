@@ -4,23 +4,25 @@ format: html
 editor: visual
 ---
 
+### **Read in & explore the data**
+
 ```{r}
 library(tidyverse)
 library(janitor)
 ```
 
 ```{r}
-stl_lead <- read_csv(here::here("data", "stl_lead.csv")) |>
+stl_lead <- read_csv(here::here("data", "stl_lead.csv")) %>% 
   janitor::clean_names()
 ```
 
 ```{r}
-stl_lead_prop <- stl_lead |> mutate(prop_white= white / total_pop)
+stl_lead_prop <- stl_lead %>% dplyr::mutate(prop_white= (white / total_pop)*100)
 ```
 
 ```{r}
 stl_lead_plot <- ggplot(data = stl_lead_prop, aes(x = pct_elevated, y = prop_white)) + 
-  geom_point(size = 0.5, alpha = 0.4, color = "red") + 
+  geom_point(aes(size = 0.5, alpha = 0.4, color = "red")) + 
   labs(title = "the graph is tilted", x = "percentage of children in each census tract with elevated blood lead (%)", y ="Percent of each census tract identifying as white(%)")
 ggsave(here::here("figs", "children v. white.png"), height = 5, width = 6)
 
